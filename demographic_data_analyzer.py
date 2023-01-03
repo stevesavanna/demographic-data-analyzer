@@ -36,8 +36,8 @@ def calculate_demographic_data(print_data=True):
     rich_percentage = round(len(df[num_min_workers & rich]) / len(df[num_min_workers]) * 100, 1)
 
     # What country has the highest percentage of people that earn >50K?
-    countries_by_earnings = df[rich].groupby("native-country", as_index=False)["salary"].count()
-    countries_by_earnings.rename(columns={"salary": "rich-count"}, inplace=True)
+    countries_by_earnings = df[rich].groupby("native-country", as_index=False).size()
+    countries_by_earnings.rename(columns={"size": "rich-count"}, inplace=True)
     countries_by_earnings["count"] = countries_by_earnings["native-country"].apply(lambda x: len(df[df["native-country"] == x]))
     countries_by_earnings["percentage"] = round(countries_by_earnings["rich-count"] / countries_by_earnings["count"] * 100, 1)
 
@@ -45,8 +45,8 @@ def calculate_demographic_data(print_data=True):
     highest_earning_country_percentage = countries_by_earnings.nlargest(1, "percentage").iloc[0]["percentage"]
 
     # Identify the most popular occupation for those who earn >50K in India.
-    occupations = df[rich & (df["native-country"] == "India")].groupby("occupation", as_index=False)["native-country"].count()
-    occupations.rename(columns={"native-country": "count"}, inplace=True)
+    occupations = df[rich & (df["native-country"] == "India")].groupby("occupation", as_index=False).size()
+    occupations.rename(columns={"size": "count"}, inplace=True)
     top_IN_occupation = occupations.nlargest(1, "count").iloc[0]["occupation"]
 
     # DO NOT MODIFY BELOW THIS LINE
